@@ -49,18 +49,18 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
   return (
     <div className="space-y-6">
       {demoMode && (
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
           <CardContent className="pt-6">
             <div className="flex items-start space-x-3">
               <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold mt-0.5">
                 ℹ
               </div>
               <div>
-                <h4 className="font-semibold text-blue-900">Demo Mode Active</h4>
-                <p className="text-sm text-blue-700 mt-1">
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100">Demo Mode Active</h4>
+                <p className="text-sm text-blue-700 dark:text-blue-200 mt-1">
                   Authentication is running in demo mode. Use any email and password (6+ characters) to test the system.
                 </p>
-                <p className="text-xs text-blue-600 mt-2">
+                <p className="text-xs text-blue-600 dark:text-blue-300 mt-2">
                   <strong>Try:</strong> test@example.com / password123
                 </p>
               </div>
@@ -109,13 +109,13 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
             </div>
 
             {error && (
-              <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md border border-red-200">
+              <div className="text-sm text-red-700 bg-red-50 p-3 rounded-md border border-red-200 dark:text-red-400 dark:bg-red-950 dark:border-red-800">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md border border-green-200">
+              <div className="text-sm text-green-700 bg-green-50 p-3 rounded-md border border-green-200 dark:text-green-400 dark:bg-green-950 dark:border-green-800">
                 {success}
               </div>
             )}
@@ -128,7 +128,7 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
               <button
                 type="button"
                 onClick={onToggleMode}
-                className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                className="text-sm text-primary hover:text-primary/80 underline-offset-4 hover:underline transition-colors font-medium"
               >
                 {mode === 'signin' 
                   ? "Don't have an account? Sign up" 
@@ -155,7 +155,7 @@ export function AuthPage() {
         />
         
         <div className="text-center mt-6">
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" size="sm" className="text-foreground hover:text-foreground/80">
             <a href="/">← Back to Home</a>
           </Button>
         </div>
