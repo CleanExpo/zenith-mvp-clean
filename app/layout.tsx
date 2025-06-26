@@ -1,3 +1,5 @@
+import './globals.css'
+
 export const metadata = {
   title: 'Zenith MVP',
   description: 'Minimal Viable Product for Zenith Platform',
