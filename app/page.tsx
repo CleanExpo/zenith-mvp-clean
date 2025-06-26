@@ -35,6 +35,10 @@ export default function Home() {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <span>UI Components Ready</span>
               </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span>Supabase Client Ready</span>
+              </div>
             </CardContent>
           </Card>
 
@@ -50,13 +54,16 @@ export default function Home() {
               <Button asChild variant="outline" className="w-full">
                 <a href="/components">View Components Showcase</a>
               </Button>
+              <Button asChild variant="outline" className="w-full">
+                <a href="/database">Database Foundation</a>
+              </Button>
             </CardContent>
           </Card>
         </div>
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            🚀 Stage 1 Complete: UI Foundation with shadcn/ui successfully integrated
+            🚀 Stage 2 Progress: Database Foundation (Supabase) client configured
           </p>
         </div>
       </div>
