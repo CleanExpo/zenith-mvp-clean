@@ -59,6 +59,10 @@ export default function Home() {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <span>Authentication System Ready</span>
               </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span>Payment System Ready</span>
+              </div>
             </CardContent>
           </Card>
 
@@ -109,13 +113,16 @@ export default function Home() {
                   <a href="/dashboard">Protected Dashboard</a>
                 </Button>
               )}
+              <Button asChild variant="outline" className="w-full">
+                <a href="/pricing">View Pricing Plans</a>
+              </Button>
             </CardContent>
           </Card>
         </div>
 
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            🎉 Stage 3 Complete: Authentication Layer fully operational
+            🚀 Stage 4 Progress: Payment Integration (Stripe) foundation ready
           </p>
         </div>
       </div>

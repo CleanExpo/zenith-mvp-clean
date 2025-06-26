@@ -75,8 +75,11 @@ function DashboardContent() {
             <Button variant="outline" className="w-full">
               Create New Project
             </Button>
-            <Button variant="outline" className="w-full">
-              View Analytics
+            <Button asChild variant="outline" className="w-full">
+              <a href="/billing">Billing & Usage</a>
+            </Button>
+            <Button asChild variant="outline" className="w-full">
+              <a href="/pricing">View Plans</a>
             </Button>
             <Button variant="outline" className="w-full">
               Settings

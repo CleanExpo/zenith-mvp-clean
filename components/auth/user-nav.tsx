@@ -27,6 +27,20 @@ export function UserNav() {
           Demo Mode
         </span>
       )}
+      
+      {/* Navigation links */}
+      <div className="flex items-center space-x-2">
+        <Button asChild variant="ghost" size="sm">
+          <a href="/dashboard">Dashboard</a>
+        </Button>
+        <Button asChild variant="ghost" size="sm">
+          <a href="/billing">Billing</a>
+        </Button>
+        <Button asChild variant="ghost" size="sm">
+          <a href="/pricing">Pricing</a>
+        </Button>
+      </div>
+      
       <div className="flex flex-col items-end">
         <span className="text-sm font-medium">
           {user.email}
