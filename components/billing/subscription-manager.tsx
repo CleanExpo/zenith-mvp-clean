@@ -501,7 +501,7 @@ export function SubscriptionManager({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogClose onClose={() => onOpenChange(false)} />
+        <DialogClose />
         
         {/* Quick Actions Bar */}
         {!currentFlow && (

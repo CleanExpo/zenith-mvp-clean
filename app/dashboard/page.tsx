@@ -72,8 +72,8 @@ function DashboardContent() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button variant="outline" className="w-full">
-              Create New Project
+            <Button asChild variant="outline" className="w-full">
+              <a href="/dashboard/realtime">Real-time Analytics</a>
             </Button>
             <Button asChild variant="outline" className="w-full">
               <a href="/billing">Billing & Usage</a>

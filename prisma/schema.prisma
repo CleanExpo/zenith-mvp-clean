@@ -52,6 +52,11 @@ model User {
   sessions           Session[]
   auditLogs          AuditLog[]
   subscriptions      Subscription[]
+  analyticsEvents    AnalyticsEvent[]
+  userSessions       UserSession[]
+  pageViews          PageView[]
+  featureUsage       FeatureUsage[]
+  userJourneys       UserJourney[]
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }
@@ -185,4 +190,133 @@ enum WebhookEventStatus {
   processing
   processed
   failed
+}
+
+// Analytics and User Behavior Tracking Models
+model AnalyticsEvent {
+  id          String             @id @default(cuid())
+  sessionId   String?
+  userId      String?
+  eventType   AnalyticsEventType
+  eventName   String
+  properties  Json?
+  page        String?
+  referrer    String?
+  userAgent   String?
+  ipAddress   String?
+  timestamp   DateTime           @default(now())
+  createdAt   DateTime           @default(now())
+  
+  user        User?              @relation(fields: [userId], references: [id])
+  session     UserSession?       @relation(fields: [sessionId], references: [id])
+  
+  @@index([userId, timestamp])
+  @@index([sessionId, timestamp])
+  @@index([eventType, timestamp])
+  @@index([eventName, timestamp])
+}
+
+model UserSession {
+  id                String          @id @default(cuid())
+  sessionId         String          @unique
+  userId            String?
+  deviceType        String?
+  browser           String?
+  os                String?
+  country           String?
+  region            String?
+  city              String?
+  startTime         DateTime        @default(now())
+  endTime           DateTime?
+  duration          Int?            // in seconds
+  pageViews         Int             @default(0)
+  events            Int             @default(0)
+  isActive          Boolean         @default(true)
+  lastActivityAt    DateTime        @default(now())
+  entryPage         String?
+  exitPage          String?
+  referrer          String?
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  utmTerm           String?
+  utmContent        String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  user              User?           @relation(fields: [userId], references: [id])
+  analyticsEvents   AnalyticsEvent[]
+  sessionPageViews  PageView[]
+  
+  @@index([userId, startTime])
+  @@index([sessionId])
+  @@index([startTime])
+}
+
+model PageView {
+  id            String      @id @default(cuid())
+  sessionId     String?
+  userId        String?
+  page          String
+  title         String?
+  referrer      String?
+  duration      Int?        // time spent on page in seconds
+  timestamp     DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  
+  user          User?       @relation(fields: [userId], references: [id])
+  session       UserSession? @relation(fields: [sessionId], references: [id])
+  
+  @@index([userId, timestamp])
+  @@index([sessionId, timestamp])
+  @@index([page, timestamp])
+}
+
+model FeatureUsage {
+  id            String      @id @default(cuid())
+  userId        String?
+  sessionId     String?
+  featureName   String
+  action        String
+  metadata      Json?
+  timestamp     DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  
+  user          User?       @relation(fields: [userId], references: [id])
+  
+  @@index([userId, featureName])
+  @@index([featureName, timestamp])
+  @@index([timestamp])
+}
+
+model UserJourney {
+  id            String      @id @default(cuid())
+  userId        String
+  sessionId     String?
+  journeyStage  String      // 'awareness', 'consideration', 'trial', 'purchase', 'retention'
+  touchpoint    String      // specific page or feature
+  action        String      // what they did
+  metadata      Json?
+  timestamp     DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  
+  user          User        @relation(fields: [userId], references: [id])
+  
+  @@index([userId, timestamp])
+  @@index([journeyStage, timestamp])
+}
+
+// Analytics Event Types
+enum AnalyticsEventType {
+  page_view
+  click
+  form_submit
+  form_start
+  form_abandon
+  feature_usage
+  api_call
+  error
+  conversion
+  engagement
+  custom
 }
