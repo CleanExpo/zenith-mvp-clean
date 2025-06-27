@@ -1,5 +1,7 @@
 import './globals.css'
+import { NextAuthProvider } from '@/lib/session-provider'
 import { AuthProvider } from '@/lib/auth-context'
+import { AdminAuthProvider } from '@/lib/admin-auth'
 
 export const metadata = {
   title: 'Zenith MVP',
@@ -14,9 +16,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <NextAuthProvider>
+          <AuthProvider>
+            <AdminAuthProvider>
+              {children}
+            </AdminAuthProvider>
+          </AuthProvider>
+        </NextAuthProvider>
       </body>
     </html>
   )

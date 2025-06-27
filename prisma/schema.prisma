@@ -1,0 +1,188 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  name               String?
+  email              String    @unique
+  emailVerified      DateTime?
+  image              String?
+  password           String?
+  stripeCustomerId   String?   @unique
+  subscriptionId     String?
+  subscriptionStatus String?   @default("free")
+  subscriptionTier   String?   @default("free")
+  accounts           Account[]
+  sessions           Session[]
+  auditLogs          AuditLog[]
+  subscriptions      Subscription[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+}
+
+// Stripe-related models
+model StripeCustomer {
+  id               String   @id @default(cuid())
+  stripeCustomerId String   @unique
+  email            String?
+  name             String?
+  metadata         Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Subscription {
+  id                   String               @id @default(cuid())
+  stripeSubscriptionId String               @unique
+  userId               String?
+  customerId           String
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  planId               String
+  planName             String
+  amount               Int
+  currency             String
+  interval             SubscriptionInterval
+  intervalCount        Int
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  cancelAtPeriodEnd    Boolean              @default(false)
+  cancelledAt          DateTime?
+  endedAt              DateTime?
+  metadata             Json?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  user                 User?                @relation(fields: [userId], references: [id])
+  usage                SubscriptionUsage[]
+}
+
+model SubscriptionUsage {
+  id                   String       @id @default(cuid())
+  subscriptionId       String
+  subscriptionItemId   String
+  quantity             Int
+  periodStart          DateTime
+  periodEnd            DateTime
+  metadata             Json?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  subscription         Subscription @relation(fields: [subscriptionId], references: [stripeSubscriptionId])
+
+  @@unique([subscriptionId, periodStart])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  stripePaymentId   String        @unique
+  customerId        String
+  amount            Int
+  currency          String
+  status            PaymentStatus
+  sessionId         String?
+  invoiceId         String?
+  paidAt            DateTime?
+  metadata          Json?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model WebhookEvent {
+  id        String            @id @default(cuid())
+  eventId   String            @unique
+  eventType String
+  payload   Json
+  status    WebhookEventStatus @default(processing)
+  error     String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+// Enums
+enum SubscriptionStatus {
+  incomplete
+  incomplete_expired
+  trialing
+  active
+  past_due
+  canceled
+  unpaid
+  paused
+}
+
+enum SubscriptionInterval {
+  day
+  week
+  month
+  year
+}
+
+enum PaymentStatus {
+  requires_payment_method
+  requires_confirmation
+  requires_action
+  processing
+  requires_capture
+  canceled
+  succeeded
+  failed
+}
+
+enum WebhookEventStatus {
+  processing
+  processed
+  failed
+}

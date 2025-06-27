@@ -2,9 +2,12 @@
 
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/auth-context'
+import { useAdminAuth } from '@/lib/admin-auth'
+import { Shield } from 'lucide-react'
 
 export function UserNav() {
   const { user, signOut, loading, demoMode } = useAuth()
+  const { isAdmin } = useAdminAuth()
 
   if (loading) {
     return <div className="h-9 w-32 bg-muted animate-pulse rounded-md" />
@@ -39,6 +42,14 @@ export function UserNav() {
         <Button asChild variant="ghost" size="sm">
           <a href="/pricing">Pricing</a>
         </Button>
+        {isAdmin && (
+          <Button asChild variant="ghost" size="sm" className="text-orange-600 hover:text-orange-700">
+            <a href="/admin" className="flex items-center space-x-1">
+              <Shield className="w-4 h-4" />
+              <span>Admin</span>
+            </a>
+          </Button>
+        )}
       </div>
       
       <div className="flex flex-col items-end">
@@ -48,6 +59,11 @@ export function UserNav() {
         {demoMode && (
           <span className="text-xs text-muted-foreground">
             Demo User
+          </span>
+        )}
+        {isAdmin && (
+          <span className="text-xs text-orange-600 font-medium">
+            Admin
           </span>
         )}
       </div>
